@@ -115,9 +115,10 @@ footer{border-top:1px solid var(--line);padding:30px 5vw;text-align:center;color
 
 <section class="s contact" id="contact">
 <div class="info rv"><h2>Let’s talk.</h2>
-<p>Send a message and I will reply within one working day.</p><br>
-<a id="cMail" href="#"></a><a id="cTel" href="#"></a>
-<p id="cAddr"></p></div>
+<p><strong>CA PRASHANT P. KOKATE</strong><br>Chartered Accountant</p>
+<p><strong>Office Address</strong><br><span id="cAddr"></span></p>
+<p><strong>Mobile</strong><br><a id="cTel1" href="#"></a><a id="cTel2" href="#"></a></p>
+<p><strong>Email</strong><br><a id="cMail1" href="#"></a><a id="cMail2" href="#"></a></p></div>
 <form id="f" class="rv panel" style="padding:26px">
 <label>Your name<input name="name" required autocomplete="name"></label>
 <label>Email<input name="email" type="email" required autocomplete="email"></label>
@@ -136,8 +137,11 @@ footer{border-top:1px solid var(--line);padding:30px 5vw;text-align:center;color
 /* ===== EDIT YOUR DETAILS HERE ===== */
 const CONFIG={
   email:"prashregularuse@gmail.com",      // form messages are sent to this address
-  phone:"+91 00000 00000",
-  address:"Your office address, City, India",
+  phone:"+91 86002 6315",
+  phone2:"+91 98344 6265",
+  contactEmail1:"cakokate@gmail.com",
+  contactEmail2:"kokate05@gmail.com",
+  address:"Fourth floor, Pandit Building, Nagar-Sambhaji Nagar Road, Newasa Phata",
   channel:"https://www.youtube.com/@WatchandmoreIndiaofficial",
   videos:[ // id = the part after v= in a YouTube link
     {id:"DyB_d2jOe0g",title:"How to save tax legally",note:"Income tax"},
@@ -159,8 +163,10 @@ CONFIG.videos.forEach(v=>{$("#vids").insertAdjacentHTML("beforeend",`<a class="v
 const terms=["Income Tax","GST","Audit","TDS","Balance Sheet","Cash Flow","Tax Planning","ROC Filing","Bookkeeping","Investments"];
 $("#tk").innerHTML=[...terms,...terms].map(t=>`<span>${t}</span>`).join("");
 $("#chan").href=CONFIG.channel;
-$("#cMail").href="mailto:"+CONFIG.email;$("#cMail").textContent=CONFIG.email;
-$("#cTel").href="tel:"+CONFIG.phone.replace(/\s/g,"");$("#cTel").textContent=CONFIG.phone;
+$("#cMail1").href="mailto:"+CONFIG.contactEmail1;$("#cMail1").textContent=CONFIG.contactEmail1;
+$("#cMail2").href="mailto:"+CONFIG.contactEmail2;$("#cMail2").textContent=CONFIG.contactEmail2;
+$("#cTel1").href="tel:"+CONFIG.phone.replace(/\s/g,"");$("#cTel1").textContent=CONFIG.phone;
+$("#cTel2").href="tel:"+CONFIG.phone2.replace(/\s/g,"");$("#cTel2").textContent=CONFIG.phone2;
 $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYear();
 $("#f").addEventListener("submit",async e=>{
   e.preventDefault();

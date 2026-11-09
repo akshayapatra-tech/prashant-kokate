@@ -20,10 +20,15 @@ a{color:inherit}
 :focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 main,nav,footer{position:relative;z-index:1}
 nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 5vw 12px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-nav b{font-family:Sora,sans-serif;font-size:1.05rem}
-nav div{display:flex;gap:20px;font-size:.95rem}
-nav a{text-decoration:none;color:var(--mute)}nav a:hover{color:var(--gold)}
-@media(max-width:640px){nav div a:nth-child(-n+2){display:none}}
+nav .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);min-width:0}
+.brand-mark{width:48px;height:48px;flex:0 0 48px;filter:drop-shadow(0 5px 10px rgba(23,43,77,.13))}
+.brand-copy{display:grid;gap:1px;line-height:1.15}
+.brand-copy strong{font:700 1rem Sora,sans-serif;letter-spacing:-.02em}
+.brand-copy small{font:700 .58rem Sora,sans-serif;letter-spacing:.13em;color:var(--mute)}
+nav .nav-links{display:flex;gap:20px;align-items:center;font-size:.95rem}
+nav .nav-links a{text-decoration:none;color:var(--mute);transition:color .2s}
+nav .nav-links a:hover{color:var(--gold)}
+@media(max-width:640px){nav{padding-inline:4vw}.brand-mark{width:42px;height:42px;flex-basis:42px}.brand-copy strong{font-size:.9rem}.brand-copy small{font-size:.52rem}nav .nav-links{gap:14px;font-size:.82rem}nav .nav-links a:nth-child(-n+2){display:none}}
 .hero{min-height:100vh;min-height:100svh;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);align-items:center;gap:48px;padding:110px 5vw 80px}
 .deadline-card{width:100%;max-width:440px;margin-left:auto;padding:25px 24px 18px;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 48px -30px rgba(23,43,77,.34);backdrop-filter:blur(12px)}
 .deadline-kicker{font:700 .72rem Sora,sans-serif;letter-spacing:.14em;color:var(--mute);margin-bottom:18px}
@@ -43,14 +48,19 @@ nav a{text-decoration:none;color:var(--mute)}nav a:hover{color:var(--gold)}
 .deadline-clock span{display:flex;flex-direction:column;gap:2px}
 .deadline-clock b{font:700 1.05rem Sora,sans-serif;font-variant-numeric:tabular-nums;color:var(--blue)}
 .deadline-clock small{font:700 .58rem Sora,sans-serif;letter-spacing:.1em;color:var(--mute)}
-.deadline-departments{display:grid;gap:12px;margin-top:18px;padding-top:15px;border-top:1px solid var(--line);max-height:330px;overflow-y:auto;padding-right:4px}
+.deadline-dropdown{margin-top:17px;padding-top:13px;border-top:1px solid var(--line)}
+.deadline-dropdown>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none;cursor:pointer;font:700 .76rem Sora,sans-serif;color:var(--blue);letter-spacing:.02em}
+.deadline-dropdown>summary::-webkit-details-marker{display:none}
+.deadline-dropdown>summary:after{content:"+";width:25px;height:25px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;font:500 1.1rem "DM Sans",sans-serif;transition:transform .25s,background .25s}
+.deadline-dropdown[open]>summary:after{content:"−";background:var(--bg2);transform:rotate(180deg)}
+.deadline-departments{display:grid;gap:18px;margin-top:17px;padding:0;max-height:none;overflow:visible}
 .deadline-department-group{display:grid;grid-template-columns:92px minmax(0,1fr);gap:9px;align-items:start;font-size:.73rem;line-height:1.45}
 .deadline-department-group>b{font:700 .65rem Sora,sans-serif;letter-spacing:.05em;color:var(--blue);padding-top:2px}
-.deadline-list{display:grid;gap:6px;color:var(--mute)}
-.deadline-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}
+.deadline-list{display:grid;gap:7px;color:var(--mute)}
+.deadline-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;padding-bottom:5px;border-bottom:1px solid rgba(23,43,77,.06)}
 .deadline-item strong{font:500 .72rem "DM Sans",sans-serif;color:var(--ink)}
 .deadline-item time{font:700 .68rem Sora,sans-serif;color:var(--mint);white-space:nowrap}
-.deadline-extra{font-size:.68rem;line-height:1.4;color:var(--mute);padding-top:5px;border-top:1px dashed var(--line);margin-top:2px}
+.deadline-extra{font-size:.68rem;line-height:1.5;color:var(--mute);padding-top:7px;border-top:1px dashed var(--line);margin-top:7px}
 .deadline-note{font-size:.66rem!important;line-height:1.45!important;color:var(--mute)!important;margin:12px 0 0!important;max-width:none!important}
 @media(max-width:820px){.hero{grid-template-columns:1fr;gap:30px;align-content:center}.deadline-card{margin:0;max-width:520px}}
 @media(max-width:420px){.deadline-card{padding:20px 16px}.deadline-main{gap:12px}.deadline-ring-wrap{flex-basis:118px;width:118px;height:118px}.deadline-ring-center strong{font-size:2.1rem}.deadline-details>strong{font-size:.92rem}.deadline-clock{gap:8px}}
@@ -69,12 +79,16 @@ nav a{text-decoration:none;color:var(--mute)}nav a:hover{color:var(--gold)}
 @keyframes mq{to{transform:translateX(-50%)}}
 section.s{padding:100px 5vw;max-width:1150px;margin:auto}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
-.card{background:var(--card);backdrop-filter:blur(10px);border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:18px;padding:26px;transition:transform .2s,border-color .25s}
+.card{background:var(--card);backdrop-filter:blur(10px);border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:18px;padding:26px;transition:transform .35s ease,box-shadow .35s ease,border-color .25s}
 .card:nth-child(3n+2){border-top-color:var(--mint)}.card:nth-child(3n){border-top-color:var(--gold)}
 .card h3{font-size:1.25rem;margin:14px 0 8px}
 .card p{margin:0;color:var(--mute);font-size:.97rem}
-.card svg{width:40px;height:40px;stroke:var(--gold);fill:none;stroke-width:1.6}
+.card svg{width:40px;height:40px;stroke:var(--gold);fill:none;stroke-width:1.6;transition:transform .35s ease}
 .card:nth-child(3n+2) svg{stroke:var(--mint)}.card:nth-child(3n) svg{stroke:var(--gold)}
+.card:hover{transform:translateY(-5px);box-shadow:0 14px 32px -20px rgba(23,43,77,.32)}
+.card:hover svg{transform:translateY(-2px) rotate(-4deg)}
+section.s>h2:after{content:"";display:block;width:54px;height:3px;margin-top:16px;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--mint));transform:scaleX(0);transform-origin:left;transition:transform .65s ease .12s}
+section.s>h2.in:after{transform:scaleX(1)}
 .about{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
 @media(max-width:760px){.about{grid-template-columns:1fr}}
 .about p{color:var(--mute)}
@@ -82,14 +96,17 @@ section.s{padding:100px 5vw;max-width:1150px;margin:auto}
 .creds{list-style:none;padding:0;margin:0}
 .creds li{padding:16px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
 .creds li:last-child{border:0}.creds span{color:var(--gold);text-align:right;font-weight:500}
-.vid{display:block;text-decoration:none;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--card);backdrop-filter:blur(10px);transition:transform .2s}
-.vid .th{aspect-ratio:16/9;display:grid;place-items:center;background:linear-gradient(135deg,#172b4d,#315b86 70%,#b68a3a);position:relative;overflow:hidden}
-.vid .th i{width:62px;height:62px;border-radius:50%;background:#b68a3a;display:grid;place-items:center;transition:transform .25s;z-index:1}
-.vid:hover .th i{transform:scale(1.18)}
-.vid .th i:after{content:"";border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:5px}
-.vid .th svg{position:absolute;left:0;bottom:0;width:100%;height:55%;opacity:.5}
-.vid .t{padding:16px 18px}.vid b{display:block;font:700 1.05rem Sora,sans-serif}
-.vid small{color:var(--mint)}
+.social-links{display:flex;align-items:center;gap:10px;margin-top:15px}
+.social-link{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--blue);transition:transform .25s ease,background .25s ease,border-color .25s ease}
+.social-link svg{width:18px;height:18px;fill:currentColor}
+a.social-link:hover{transform:translateY(-3px);background:var(--bg2);border-color:var(--mint)}
+.social-link.is-placeholder{opacity:.48;cursor:default}
+.contact-float{position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;flex-direction:column;gap:10px}
+.quick-contact{width:50px;height:50px;display:grid;place-items:center;border-radius:50%;background:#fff;color:var(--ink);border:1px solid rgba(23,43,77,.1);box-shadow:0 8px 22px rgba(23,43,77,.18);transition:transform .25s ease,box-shadow .25s ease}
+.quick-contact svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.quick-contact:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 26px rgba(23,43,77,.22)}
+.quick-contact.whatsapp{background:#25d366;color:#073b20;border-color:transparent}
+@media(max-width:640px){.contact-float{right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));gap:8px}.quick-contact{width:45px;height:45px}.quick-contact svg{width:20px;height:20px}}
 .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:50px}
 @media(max-width:760px){.contact{grid-template-columns:1fr}}
 .info a{display:block;font-size:1.1rem;margin:10px 0;color:var(--gold);text-decoration:none;overflow-wrap:anywhere}
@@ -101,21 +118,33 @@ input:focus,select:focus,textarea:focus{border-color:var(--mint)}
 select option{color:#2a1236}
 #msg{min-height:1.4em;color:var(--mint);font-size:.95rem}
 footer{border-top:1px solid var(--line);padding:30px 5vw;text-align:center;color:var(--mute);font-size:.9rem;background:var(--bg)}
-.rv{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}.rv.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}.tick div{animation:none}}
-.card:hover,.vid:hover{box-shadow:0 12px 32px -18px rgba(23,43,77,.28)}.hero h1{text-shadow:0 8px 28px rgba(23,43,77,.08)}.panel{box-shadow:0 12px 32px -20px rgba(23,43,77,.2)}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .65s ease,transform .65s ease}.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}.tick div{animation:none}.card,.card svg,.social-link,.quick-contact{transition:none!important}}
+.hero h1{text-shadow:0 8px 28px rgba(23,43,77,.08)}.panel{box-shadow:0 12px 32px -20px rgba(23,43,77,.2);transition:transform .35s ease,box-shadow .35s ease}
+.panel:hover{transform:translateY(-3px);box-shadow:0 16px 36px -22px rgba(23,43,77,.26)}
 </style>
 </head>
 <body>
-<nav><b>Prashant Kokate</b><div><a href="#services">Services</a><a href="#about">About</a><a href="#videos">Videos</a><a href="#contact">Contact</a></div></nav>
+<nav>
+<a class="brand" href="#home" aria-label="Prashant Kokate, Chartered Accountant — home">
+<svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-label="CA monogram logo">
+<rect x="2" y="2" width="60" height="60" rx="17" fill="#172b4d"/>
+<path d="M12 17h40M12 47h40" stroke="#b68a3a" stroke-width="1.5" opacity=".9"/>
+<text x="32" y="39" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-size="23" font-weight="700" letter-spacing="-1">CA</text>
+<circle cx="32" cy="11" r="2" fill="#b68a3a"/>
+</svg>
+<span class="brand-copy"><strong>Prashant Kokate</strong><small>CHARTERED ACCOUNTANT</small></span>
+</a>
+<div class="nav-links"><a href="#services">Services</a><a href="#about">About</a><a href="#contact">Contact</a></div>
+</nav>
 <main>
-<header class="hero">
+<header class="hero" id="home">
 <div class="txt">
 <h1>Your money,<br><em>in clear numbers.</em></h1>
 <p>Prashant Kokate, Chartered Accountant. Tax, audit, GST and business advice in plain language.</p>
 <a class="btn" href="#contact">Book a consultation</a><a class="btn ghost" href="#services">See services</a>
 </div>
-<aside class="deadline-card rv" aria-label="Upcoming statutory compliance deadline">
+<aside class="deadline-card" aria-label="Upcoming statutory compliance deadline">
 <div class="deadline-kicker">NEXT COMPLIANCE DEADLINE</div>
 <div class="deadline-main">
 <div class="deadline-ring-wrap">
@@ -135,12 +164,15 @@ footer{border-top:1px solid var(--line);padding:30px 5vw;text-align:center;color
 </div>
 </div>
 </div>
-<div class="deadline-departments" aria-label="Upcoming GST, Income Tax and MCA compliance dates">
+<details class="deadline-dropdown">
+<summary>View all upcoming compliance deadlines</summary>
+<div class="deadline-departments" aria-label="Full upcoming GST, Income Tax and MCA compliance dates">
 <div class="deadline-department-group"><b>GST</b><div id="gstNext">Loading compliance dates…</div></div>
 <div class="deadline-department-group"><b>INCOME TAX</b><div id="incomeTaxNext">Loading compliance dates…</div></div>
 <div class="deadline-department-group"><b>MCA / ROC / LLP</b><div id="mcaNext">Loading compliance dates…</div></div>
 </div>
-<p class="deadline-note">Comprehensive indicative calendar for common and conditional compliances. Applicability, turnover category, QRMP/state category, AGM/event dates and government extensions can change deadlines. GSTR-2B is an auto-generated ITC statement; GSTR-2X is a TDS/TCS credit-received statement and neither has a normal return-filing due date. Verify portal notices before filing.</p>
+</details>
+<p class="deadline-note">Full list of generated upcoming standard dates. Applicability, turnover category, QRMP/state category, AGM/event dates and government extensions can change deadlines. GSTR-2B is an auto-generated ITC statement; GSTR-2X is a TDS/TCS credit-received statement and neither has a normal return-filing due date. Verify portal notices before filing.</p>
 </aside>
 </header>
 <div class="tick"><div id="tk"></div></div>
@@ -161,18 +193,14 @@ footer{border-top:1px solid var(--line);padding:30px 5vw;text-align:center;color
 <li>Languages <span>English, Hindi, Marathi</span></li>
 </ul></div></section>
 
-<section class="s" id="videos">
-<h2 class="rv">Learn on YouTube</h2>
-<p class="rv" style="color:var(--mute);max-width:52ch;margin-top:-.6em">Short videos on tax saving, GST and money basics. <a href="#" id="chan" target="_blank" rel="noopener" style="color:var(--gold)">Visit the channel</a></p>
-<div class="grid" id="vids" style="margin-top:28px"></div>
-</section>
-
 <section class="s contact" id="contact">
 <div class="info rv"><h2>Let’s talk.</h2>
 <p><strong>CA PRASHANT P. KOKATE</strong><br>Chartered Accountant</p>
 <p><strong>Office Address</strong><br><span id="cAddr"></span></p>
 <p><strong>Mobile</strong><br><a id="cTel1" href="#"></a><a id="cTel2" href="#"></a></p>
-<p><strong>Email</strong><br><a id="cMail1" href="#"></a><a id="cMail2" href="#"></a></p></div>
+<p><strong>Email</strong><br><a id="cMail1" href="#"></a><a id="cMail2" href="#"></a></p>
+<div class="social-links" id="socialLinks" aria-label="Social profiles"></div>
+</div>
 <form id="f" class="rv panel" style="padding:26px">
 <label>Your name<input name="name" required autocomplete="name"></label>
 <label>Email<input name="email" type="email" required autocomplete="email"></label>
@@ -185,6 +213,17 @@ footer{border-top:1px solid var(--line);padding:30px 5vw;text-align:center;color
 </form></section>
 </main>
 <footer>© <span id="yr"></span> Prashant Kokate, Chartered Accountant. All rights reserved.</footer>
+<div class="contact-float" aria-label="Quick contact actions">
+<a class="quick-contact" href="tel:+918600264315" aria-label="Call CA Prashant Kokate" title="Call">
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.63a2 2 0 0 1-.45 2.11L8 9.75a16 16 0 0 0 6 6l1.29-1.29a2 2 0 0 1 2.11-.45c.85.3 1.73.51 2.63.63A2 2 0 0 1 22 16.92z"/></svg>
+</a>
+<a class="quick-contact" href="mailto:cakokate@gmail.com" aria-label="Email CA Prashant Kokate" title="Email">
+<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+</a>
+<a class="quick-contact whatsapp" href="https://wa.me/918600264315?text=Hello%20CA%20Prashant%20Kokate%2C%20I%20would%20like%20to%20connect." target="_blank" rel="noopener" aria-label="Message CA Prashant Kokate on WhatsApp" title="WhatsApp">
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3 20l.9-4.7a8.5 8.5 0 1 1 16.6-3.5z"/><path d="M8.8 8.2c.2-.5.5-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.6.7c-.2.2-.2.4 0 .7.6 1 1.4 1.8 2.5 2.3.3.1.5.1.7-.1l.8-.9c.2-.2.4-.3.7-.2l1.6.8c.3.1.4.3.4.5 0 .5-.2 1.1-.6 1.4-.5.4-1.1.7-1.8.6-1.1-.1-2.6-.8-4.1-2.1-1.2-1.1-2.1-2.6-2.3-3.6-.2-.9.1-1.8.5-2.4z"/></svg>
+</a>
+</div>
 
 <script>
 /* ===== EDIT YOUR DETAILS HERE ===== */
@@ -195,12 +234,8 @@ const CONFIG={
   contactEmail1:"cakokate@gmail.com",
   contactEmail2:"kokate05@gmail.com",
   address:"Fourth floor, Pandit Building, Nagar-Sambhaji Nagar Road, Newasa Phata",
-  channel:"https://www.youtube.com/@WatchandmoreIndiaofficial",
-  videos:[ // id = the part after v= in a YouTube link
-    {id:"DyB_d2jOe0g",title:"How to save tax legally",note:"Income tax"},
-    {id:"VIDEO_ID_2",title:"GST made simple",note:"GST"},
-    {id:"VIDEO_ID_3",title:"Money habits for beginners",note:"Personal finance"}
-  ]
+  // Add confirmed profile URLs here; icons remain visible but inactive until populated.
+  socials:{instagram:"",linkedin:"",facebook:""}
 };
 /* ================================== */
 const $=s=>document.querySelector(s);
@@ -212,10 +247,23 @@ const icons={tax:'<path d="M6 3h9l4 4v14H6z M14 3v5h5 M9 13h6 M9 17h4"/>',gst:'<
  ["book","Accounting","Tidy books, timely MIS reports and a clear view of cash flow."],
  ["plan","Financial planning","Investments, savings and retirement planning matched to your goals."]
 ].forEach(([i,t,d])=>{$("#svc").insertAdjacentHTML("beforeend",`<div class="card rv"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">${icons[i]}</svg><h3>${t}</h3><p>${d}</p></div>`)});
-CONFIG.videos.forEach(v=>{$("#vids").insertAdjacentHTML("beforeend",`<a class="vid rv" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener"><div class="th"><svg viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0 35L20 25 40 30 60 15 80 18 100 3V40H0z" fill="#ffc857"/></svg><i></i></div><div class="t"><b>${v.title}</b><small>${v.note}</small></div></a>`)});
 const terms=["Income Tax","GST","Audit","TDS","Balance Sheet","Cash Flow","Tax Planning","ROC Filing","Bookkeeping","Investments"];
 $("#tk").innerHTML=[...terms,...terms].map(t=>`<span>${t}</span>`).join("");
-$("#chan").href=CONFIG.channel;
+const socialIcons={
+  instagram:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2"/></svg>',
+  linkedin:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5A1.5 1.5 0 1 1 5 6.5a1.5 1.5 0 0 1 0-3M4 9h2v11H4zM10 9h2v1.5c.7-1.1 1.7-1.7 3.2-1.7 3 0 3.8 1.9 3.8 4.7V20h-2v-5.8c0-1.8-.4-3.5-2.5-3.5-2 0-2.5 1.5-2.5 3.4V20h-2z"/></svg>',
+  facebook:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.3v3h2.8v8z"/></svg>'
+};
+[{key:"instagram",label:"Instagram"},{key:"linkedin",label:"LinkedIn"},{key:"facebook",label:"Facebook"}].forEach(profile=>{
+  const url=CONFIG.socials[profile.key]||"";
+  const item=document.createElement(url?"a":"span");
+  item.className="social-link"+(url?"":" is-placeholder");
+  item.setAttribute("aria-label",url?"Open "+profile.label+" profile":profile.label+" profile URL not configured");
+  item.title=url?"Open "+profile.label+" profile":"Add your "+profile.label+" profile URL in CONFIG.socials";
+  if(url){item.href=url;item.target="_blank";item.rel="noopener";}
+  item.innerHTML=socialIcons[profile.key];
+  $("#socialLinks").appendChild(item);
+});
 $("#cMail1").href="mailto:"+CONFIG.contactEmail1;$("#cMail1").textContent=CONFIG.contactEmail1;
 $("#cMail2").href="mailto:"+CONFIG.contactEmail2;$("#cMail2").textContent=CONFIG.contactEmail2;
 $("#cTel1").href="tel:"+CONFIG.phone.replace(/\s/g,"");$("#cTel1").textContent=CONFIG.phone;
@@ -328,8 +376,8 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
     // Event-based MCA filing windows are explained in the department note below.
     return items.sort((a,b)=>a.due-b.due);
   }
-  function renderList(items,dept,limit){
-    const selected=items.filter(x=>x.dept===dept).slice(0,limit);
+  function renderList(items,dept){
+    const selected=items.filter(x=>x.dept===dept);
     return selected.map(x=>'<div class="deadline-item"><strong>'+x.name+'</strong><time>'+fmt(x.due)+'</time></div>').join("")||'<div class="deadline-extra">No upcoming standard date in the generated window.</div>';
   }
   function update(){
@@ -348,9 +396,9 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
     ring.style.strokeDasharray=circumference.toFixed(2);
     ring.style.strokeDashoffset=(circumference*(1-progress)).toFixed(2);
     ring.setAttribute("aria-label",days+" days remaining until "+next.name);
-    $("#gstNext").innerHTML='<div class="deadline-list">'+renderList(items,"GST",5)+'</div><div class="deadline-extra">GSTR-2X: review/accept TDS-TCS credit received; no fixed statutory filing date. GSTR-2B: auto-generated ITC statement (normally generated on the 14th). GSTR-1A: optional amendment before filing GSTR-3B. GSTR-10: within 3 months of cancellation / cancellation order. Refund applications (RFD-01): generally within 2 years of the relevant date.</div>';
-    $("#incomeTaxNext").innerHTML='<div class="deadline-list">'+renderList(items,"Income Tax",5)+'</div><div class="deadline-extra">Also track challan-cum-statements (26QB / 26QC / 26QD / 26QE) within 30 days of the relevant month-end, where applicable.</div>';
-    $("#mcaNext").innerHTML='<div class="deadline-list">'+renderList(items,"MCA",5)+'</div><div class="deadline-extra">Event-based: AGM generally within 6 months of FY close (normally 30 September); ADT-1 within 15 days of AGM; AOC-4 / AOC-4 XBRL within 30 days; MGT-7 / MGT-7A within 60 days. DIR-12 and MGT-14 generally within 30 days of the event; PAS-3 generally within 30 days of allotment (special cases may differ); INC-20A within 180 days of incorporation.</div>';
+    $("#gstNext").innerHTML='<div class="deadline-list">'+renderList(items,"GST")+'</div><div class="deadline-extra">GSTR-2X: review/accept TDS-TCS credit received; no fixed statutory filing date. GSTR-2B: auto-generated ITC statement (normally generated on the 14th). GSTR-1A: optional amendment before filing GSTR-3B. GSTR-10: within 3 months of cancellation / cancellation order. Refund applications (RFD-01): generally within 2 years of the relevant date.</div>';
+    $("#incomeTaxNext").innerHTML='<div class="deadline-list">'+renderList(items,"Income Tax")+'</div><div class="deadline-extra">Also track challan-cum-statements (26QB / 26QC / 26QD / 26QE) within 30 days of the relevant month-end, where applicable.</div>';
+    $("#mcaNext").innerHTML='<div class="deadline-list">'+renderList(items,"MCA")+'</div><div class="deadline-extra">Event-based: AGM generally within 6 months of FY close (normally 30 September); ADT-1 within 15 days of AGM; AOC-4 / AOC-4 XBRL within 30 days; MGT-7 / MGT-7A within 60 days. DIR-12 and MGT-14 generally within 30 days of the event; PAS-3 generally within 30 days of allotment (special cases may differ); INC-20A within 180 days of incorporation.</div>';
   }
   update();
   setInterval(update,1000);
@@ -386,9 +434,8 @@ $("#f").addEventListener("submit",async e=>{
 });
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}}),{threshold:.12});
 document.querySelectorAll(".rv").forEach(el=>io.observe(el));
-document.querySelectorAll(".card,.vid").forEach(c=>{
-  c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(700px) rotateY(${x*10}deg) rotateX(${-y*10}deg)`});
-  c.addEventListener("mouseleave",()=>c.style.transform="");
+document.querySelectorAll("#services .card").forEach((card,index)=>{
+  card.style.transitionDelay=Math.min(index*70,350)+"ms";
 });
 
 </script>

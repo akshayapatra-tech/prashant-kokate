@@ -134,7 +134,7 @@ footer{border-top:1px solid var(--line);padding:30px 5vw;text-align:center;color
 <script>
 /* ===== EDIT YOUR DETAILS HERE ===== */
 const CONFIG={
-  email:"your-email@example.com",      // form messages are sent to this address
+  email:"prashregularuse@gmail.com",      // form messages are sent to this address
   phone:"+91 00000 00000",
   address:"Your office address, City, India",
   channel:"https://www.youtube.com/@WatchandmoreIndiaofficial",
@@ -174,7 +174,7 @@ document.querySelectorAll(".card,.vid").forEach(c=>{
   c.addEventListener("mouseleave",()=>c.style.transform="");
 });
 
-/* ===== Scroll-driven 3D world: rupee coin + growth arrow > calculator > bank > pie chart > tax shield ===== */
+/* ===== Scroll-driven 3D world: growth arrow > calculator > bank > pie chart > tax shield ===== */
 (function(){
   if(!window.THREE)return;
   const cv=$("#bg"),calm=matchMedia("(prefers-reduced-motion:reduce)").matches,light=matchMedia("(prefers-color-scheme:light)").matches;
@@ -186,26 +186,16 @@ document.querySelectorAll(".card,.vid").forEach(c=>{
   const P=new THREE.PointLight(0xffd88a,1.6,40);P.position.set(-6,0,5);S.add(P);
   const M=(c,m=.5,r=.35,e)=>new THREE.MeshStandardMaterial({color:c,metalness:m,roughness:r,emissive:e||0,emissiveIntensity:e?.6:0});
   const gold=M(0xffc857,.9,.25),mint=M(0x34e0a1,.4,.3),blue=M(0xffd88a,.5,.3),red=M(0xff6b6b,.4,.3);
-  // rupee coin face texture
-  const cvs=document.createElement("canvas");cvs.width=cvs.height=256;const x=cvs.getContext("2d");
-  const gr=x.createRadialGradient(128,128,20,128,128,128);gr.addColorStop(0,"#ffe08a");gr.addColorStop(1,"#e0a22b");
-  x.fillStyle=gr;x.fillRect(0,0,256,256);x.strokeStyle="#b97d0f";x.lineWidth=10;x.beginPath();x.arc(128,128,112,0,7);x.stroke();
-  x.fillStyle="#9a6508";x.font="700 150px Sora,Arial,sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText("₹",128,138);
-  const tex=new THREE.CanvasTexture(cvs),face=new THREE.MeshStandardMaterial({map:tex,metalness:.7,roughness:.3});
-  const coinGeo=(r,h)=>new THREE.CylinderGeometry(r,r,h,48);
-  const mkCoin=(r,h)=>new THREE.Mesh(coinGeo(r,h),[gold,face,face]);
   const Y=[0,-8.5,-17,-25.5,-34];
 
-  // background: particles + falling rupee coins
+  // background particles
   const N=600,pp=new Float32Array(N*3);
   for(let i=0;i<N;i++){pp[i*3]=(Math.random()-.5)*34;pp[i*3+1]=-Math.random()*44+6;pp[i*3+2]=-Math.random()*16-1}
   const pts=new THREE.Points(new THREE.BufferGeometry().setAttribute("position",new THREE.BufferAttribute(pp,3)),new THREE.PointsMaterial({color:light?0xff5fa2:0xcdbfd0,size:.06,transparent:true,opacity:.7}));
   S.add(pts);
-  const rain=[];for(let i=0;i<22;i++){const c=mkCoin(.3+Math.random()*.2,.07);c.position.set((Math.random()-.5)*20,6-Math.random()*44,-3-Math.random()*6);c.userData={s:.4+Math.random()*.6,r:Math.random()*2};S.add(c);rain.push(c)}
 
-  // 1: big rupee coin, candlesticks, rising arrow
+  // 1: candlesticks and rising arrow
   const hero=new THREE.Group(),candles=[];
-  const coin=mkCoin(1.5,.3);coin.rotation.x=Math.PI/2;const cg=new THREE.Group();cg.add(coin);cg.position.set(0,1.4,0);hero.add(cg);
   for(let i=0;i<8;i++){const g=new THREE.Group(),w=new THREE.Mesh(new THREE.BoxGeometry(.04,1,.04),blue),b=new THREE.Mesh(new THREE.BoxGeometry(.4,1,.4),mint);g.add(w,b);g.position.set(-2.2+i*.62,-1.8,-.8);g.userData={w,b,ph:i*.8,base:i*.22};hero.add(g);candles.push(g)}
   const arrow=new THREE.Group();
   const sh=new THREE.Mesh(new THREE.BoxGeometry(.28,3.2,.28),mint),hd=new THREE.Mesh(new THREE.ConeGeometry(.5,.9,24),mint);sh.position.y=0;hd.position.y=2;arrow.add(sh,hd);arrow.rotation.z=-.6;arrow.position.set(2.2,.6,0);hero.add(arrow);
@@ -218,14 +208,13 @@ document.querySelectorAll(".card,.vid").forEach(c=>{
   for(let r=0;r<4;r++)for(let c=0;c<3;c++){const k=new THREE.Mesh(new THREE.BoxGeometry(.7,.55,.18),M(c==2?0xffc857:0xf3efe0,.3,.4,0x000000));k.position.set(-.85+c*.85,.55-r*.75,.32);k.userData.i=r*3+c;calc.add(k);keys.push(k)}
   calc.position.y=Y[1];S.add(calc);
 
-  // 3: bank building with coins
+  // 3: bank building
   const bank=new THREE.Group(),ivory=M(0xf1e9d2,.2,.5);
   const bx=(w,h,d,y,m)=>{const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m||ivory);b.position.y=y;bank.add(b)};
   bx(4.6,.25,2.2,-1.9);bx(4.2,.25,1.9,-1.65);
   for(let i=0;i<5;i++){const c=new THREE.Mesh(new THREE.CylinderGeometry(.2,.22,2.2,20),ivory);c.position.set(-1.6+i*.8,-.4,0);bank.add(c)}
   bx(4.2,.3,1.9,.8,M(0xffc857,.8,.3));
   const ped=new THREE.Mesh(new THREE.ConeGeometry(2.4,1.1,3),ivory);ped.rotation.y=Math.PI/2;ped.scale.set(1,1,.8);ped.position.y=1.5;ped.rotation.z=0;bank.add(ped);
-  const bc=[];for(let i=0;i<4;i++){const c=mkCoin(.35,.08);bank.add(c);bc.push(c)}
   bank.position.y=Y[2];S.add(bank);
 
   // 4: pie chart
@@ -236,11 +225,10 @@ document.querySelectorAll(".card,.vid").forEach(c=>{
     const mid=a+v*Math.PI;m.userData.d=new THREE.Vector2(Math.cos(mid),Math.sin(mid));pie.add(m);segs.push(m);return a+v*Math.PI*2},0);
   pie.rotation.x=-.9;pie.position.y=Y[3];S.add(pie);
 
-  // 5: tax shield with rupee coin
+  // 5: tax shield
   const shield=new THREE.Group();
   const sp=new THREE.Shape();sp.moveTo(0,2);sp.bezierCurveTo(1,1.8,1.6,1.8,1.9,1.6);sp.bezierCurveTo(1.9,-.6,1.2,-1.6,0,-2.3);sp.bezierCurveTo(-1.2,-1.6,-1.9,-.6,-1.9,1.6);sp.bezierCurveTo(-1.6,1.8,-1,1.8,0,2);
   shield.add(new THREE.Mesh(new THREE.ExtrudeGeometry(sp,{depth:.4,bevelEnabled:true,bevelSize:.08,bevelThickness:.08,bevelSegments:3}),M(0xff5fa2,.6,.3)));
-  const sc2=mkCoin(.9,.16);sc2.rotation.x=Math.PI/2;const scg=new THREE.Group();scg.add(sc2);scg.position.set(0,0,.6);shield.add(scg);
   shield.position.y=Y[4];S.add(shield);
 
   let mx=0,my=0,sc=0,narrow=false;
@@ -258,9 +246,7 @@ document.querySelectorAll(".card,.vid").forEach(c=>{
     all.forEach((o,i)=>o.position.x=narrow?0:X[i]);
     C.position.y=-sc*34-.5;C.position.x=mx*.8;C.lookAt(0,C.position.y,0);
     pts.rotation.y=t*.02*k;
-    rain.forEach(c=>{c.rotation.x+=.02*c.userData.s*k;c.rotation.z+=.015*k;c.position.y-=.012*c.userData.s*k;if(c.position.y<-40)c.position.y=6});
     const grow=calm?1:Math.min(1,t/1.8);
-    cg.rotation.y+=.03*k;cg.position.y=1.4+Math.sin(t*1.5)*.2*k;
     candles.forEach(g=>{const u=g.userData,v=Math.sin(t*1.3+u.ph)*k,bh=(.9+Math.abs(v)*1.1+u.base)*grow,up=Math.cos(t*1.3+u.ph)>=0||calm;
       u.b.scale.y=Math.max(.05,bh);u.b.material=up?mint:red;u.w.scale.y=bh+.8;g.position.y=-2.4+bh/2});
     const ap=calm?1:.85+Math.sin(t*2)*.1;arrow.scale.setScalar(ap*grow);arrow.position.y=.6+Math.sin(t*2)*.15*k;
@@ -269,10 +255,9 @@ document.querySelectorAll(".card,.vid").forEach(c=>{
     keys.forEach(c=>{const on=((Math.floor(t*3)%14)==c.userData.i)&&!calm;c.material.emissive.setHex(on?0xffc857:0);c.material.emissiveIntensity=on?.9:0;c.position.z=on?.26:.32});
     scr.material.emissiveIntensity=.5+Math.sin(t*3)*.2*k;
     bank.rotation.y=Math.sin(t*.4)*.5*k;
-    bc.forEach((c,i)=>{const p=((t*.5+i*.25)%1);c.position.set(-1.2+i*.8,2.8-p*3.6,1.3);c.rotation.x=Math.PI/2;c.rotation.z=t*3*k;c.visible=calm?i==0:p<.9});
     pie.rotation.z+=.004*k;
     segs.forEach(s=>{const o=.2+.35*Math.max(0,Math.sin(t*1.2+s.id))*k;s.position.set(s.userData.d.x*o,s.userData.d.y*o,0)});
-    shield.rotation.y=Math.sin(t*.6)*.5*k;scg.rotation.y=t*1.2*k;scg.position.z=.6+Math.sin(t*2)*.1*k;
+    shield.rotation.y=Math.sin(t*.6)*.5*k;
     R.render(S,C)})();
 })();
 </script>

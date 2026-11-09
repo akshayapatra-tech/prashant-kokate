@@ -6,21 +6,21 @@
 <title>Prashant Kokate | Chartered Accountant</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0f0a16;--bg2:#231433;--ink:#f6f3e8;--mute:#cdbfd0;--gold:#ffc857;--mint:#34e0a1;--blue:#ff5fa2;--line:rgba(246,243,232,.16);--card:rgba(30,18,44,.72);--on:#0f0a16;--glow:rgba(255,95,162,.18);
+:root{--bg:#f4f7fb;--bg2:#e8eef6;--ink:#172b4d;--mute:#5f6f86;--gold:#b68a3a;--mint:#247a72;--blue:#315b86;--line:rgba(23,43,77,.13);--card:rgba(255,255,255,.88);--on:#fff;--glow:rgba(49,91,134,.08);
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f8f6ee;--bg2:#f6e8f0;--ink:#2a1236;--mute:#6a4f78;--gold:#c98a00;--mint:#0a9e6e;--blue:#d1357a;--line:rgba(42,18,54,.16);--card:rgba(255,255,255,.8);--on:#fff;--glow:rgba(209,53,122,.12)}}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f7fb;--bg2:#e8eef6;--ink:#172b4d;--mute:#5f6f86;--gold:#b68a3a;--mint:#247a72;--blue:#315b86;--line:rgba(23,43,77,.13);--card:rgba(255,255,255,.9);--on:#fff;--glow:rgba(49,91,134,.08)}}
 :root[data-theme="light"]{--bg:#f8f6ee;--bg2:#f6e8f0;--ink:#2a1236;--mute:#6a4f78;--gold:#c98a00;--mint:#0a9e6e;--blue:#d1357a;--line:rgba(42,18,54,.16);--card:rgba(255,255,255,.8);--on:#fff;--glow:rgba(209,53,122,.12)}
-:root[data-theme="dark"]{--bg:#0f0a16;--bg2:#231433;--ink:#f6f3e8;--mute:#cdbfd0;--gold:#ffc857;--mint:#34e0a1;--blue:#ff5fa2;--line:rgba(246,243,232,.16);--card:rgba(30,18,44,.72);--on:#0f0a16;--glow:rgba(255,95,162,.18)}
+:root[data-theme="dark"]{--bg:#f4f7fb;--bg2:#e8eef6;--ink:#172b4d;--mute:#5f6f86;--gold:#b68a3a;--mint:#247a72;--blue:#315b86;--line:rgba(23,43,77,.13);--card:rgba(255,255,255,.9);--on:#fff;--glow:rgba(49,91,134,.08)}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at 80% 0,var(--glow),transparent 45%),radial-gradient(circle at 0 60%,var(--glow),transparent 40%),var(--bg);color:var(--ink);font:400 17px/1.65 "DM Sans",system-ui,sans-serif;overflow-x:hidden}
+body{margin:0;background:linear-gradient(180deg,var(--bg) 0%,#eef3f9 48%,var(--bg) 100%);color:var(--ink);font:400 17px/1.65 "DM Sans",system-ui,sans-serif;overflow-x:hidden}
 h1,h2,h3{font-family:Sora,system-ui,sans-serif;font-weight:800;line-height:1.08;margin:0;letter-spacing:-.02em}
 h2{font-size:clamp(2rem,5vw,3.1rem);margin-bottom:.6em}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0}
 main,nav,footer{position:relative;z-index:1}
-nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 5vw 12px;background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 5vw 12px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 nav b{font-family:Sora,sans-serif;font-size:1.05rem}
 nav div{display:flex;gap:20px;font-size:.95rem}
 nav a{text-decoration:none;color:var(--mute)}nav a:hover{color:var(--gold)}
@@ -41,12 +41,12 @@ nav a{text-decoration:none;color:var(--mute)}nav a:hover{color:var(--gold)}
 @keyframes mq{to{transform:translateX(-50%)}}
 section.s{padding:100px 5vw;max-width:1150px;margin:auto}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
-.card{background:var(--card);backdrop-filter:blur(10px);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:18px;padding:26px;transition:transform .2s,border-color .25s}
-.card:nth-child(3n+2){border-top-color:var(--mint)}.card:nth-child(3n){border-top-color:var(--blue)}
+.card{background:var(--card);backdrop-filter:blur(10px);border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:18px;padding:26px;transition:transform .2s,border-color .25s}
+.card:nth-child(3n+2){border-top-color:var(--mint)}.card:nth-child(3n){border-top-color:var(--gold)}
 .card h3{font-size:1.25rem;margin:14px 0 8px}
 .card p{margin:0;color:var(--mute);font-size:.97rem}
 .card svg{width:40px;height:40px;stroke:var(--gold);fill:none;stroke-width:1.6}
-.card:nth-child(3n+2) svg{stroke:var(--mint)}.card:nth-child(3n) svg{stroke:var(--blue)}
+.card:nth-child(3n+2) svg{stroke:var(--mint)}.card:nth-child(3n) svg{stroke:var(--gold)}
 .about{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
 @media(max-width:760px){.about{grid-template-columns:1fr}}
 .about p{color:var(--mute)}
@@ -55,8 +55,8 @@ section.s{padding:100px 5vw;max-width:1150px;margin:auto}
 .creds li{padding:16px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
 .creds li:last-child{border:0}.creds span{color:var(--gold);text-align:right;font-weight:500}
 .vid{display:block;text-decoration:none;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--card);backdrop-filter:blur(10px);transition:transform .2s}
-.vid .th{aspect-ratio:16/9;display:grid;place-items:center;background:linear-gradient(135deg,#231433,#8a1f5c 70%,#ffc857);position:relative;overflow:hidden}
-.vid .th i{width:62px;height:62px;border-radius:50%;background:#ff2d2d;display:grid;place-items:center;transition:transform .25s;z-index:1}
+.vid .th{aspect-ratio:16/9;display:grid;place-items:center;background:linear-gradient(135deg,#172b4d,#315b86 70%,#b68a3a);position:relative;overflow:hidden}
+.vid .th i{width:62px;height:62px;border-radius:50%;background:#b68a3a;display:grid;place-items:center;transition:transform .25s;z-index:1}
 .vid:hover .th i{transform:scale(1.18)}
 .vid .th i:after{content:"";border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:5px}
 .vid .th svg{position:absolute;left:0;bottom:0;width:100%;height:55%;opacity:.5}
@@ -75,7 +75,7 @@ select option{color:#2a1236}
 footer{border-top:1px solid var(--line);padding:30px 5vw;text-align:center;color:var(--mute);font-size:.9rem;background:var(--bg)}
 .rv{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}.rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}.tick div{animation:none}}
-.card:hover,.vid:hover{box-shadow:0 0 36px -6px var(--blue)}.hero h1{text-shadow:0 0 60px rgba(255,200,87,.22)}.panel{box-shadow:0 0 40px -18px var(--blue)}
+.card:hover,.vid:hover{box-shadow:0 12px 32px -18px rgba(23,43,77,.28)}.hero h1{text-shadow:0 8px 28px rgba(23,43,77,.08)}.panel{box-shadow:0 12px 32px -20px rgba(23,43,77,.2)}
 </style>
 </head>
 <body>
@@ -215,7 +215,7 @@ document.querySelectorAll(".card,.vid").forEach(c=>{
   const L=new THREE.DirectionalLight(0xffffff,1.1);L.position.set(5,8,8);S.add(L);
   const P=new THREE.PointLight(0xffd88a,1.6,40);P.position.set(-6,0,5);S.add(P);
   const M=(c,m=.5,r=.35,e)=>new THREE.MeshStandardMaterial({color:c,metalness:m,roughness:r,emissive:e||0,emissiveIntensity:e?.6:0});
-  const gold=M(0xffc857,.9,.25),mint=M(0x34e0a1,.4,.3),blue=M(0xffd88a,.5,.3),red=M(0xff6b6b,.4,.3);
+  const gold=M(0xb68a3a,.75,.32),mint=M(0x247a72,.35,.38),blue=M(0x315b86,.5,.34),red=M(0x9b5960,.35,.4);
   const Y=[0,-8.5,-17,-25.5,-34];
 
   // background particles
@@ -258,7 +258,7 @@ document.querySelectorAll(".card,.vid").forEach(c=>{
   // 5: tax shield
   const shield=new THREE.Group();
   const sp=new THREE.Shape();sp.moveTo(0,2);sp.bezierCurveTo(1,1.8,1.6,1.8,1.9,1.6);sp.bezierCurveTo(1.9,-.6,1.2,-1.6,0,-2.3);sp.bezierCurveTo(-1.2,-1.6,-1.9,-.6,-1.9,1.6);sp.bezierCurveTo(-1.6,1.8,-1,1.8,0,2);
-  shield.add(new THREE.Mesh(new THREE.ExtrudeGeometry(sp,{depth:.4,bevelEnabled:true,bevelSize:.08,bevelThickness:.08,bevelSegments:3}),M(0xff5fa2,.6,.3)));
+  shield.add(new THREE.Mesh(new THREE.ExtrudeGeometry(sp,{depth:.4,bevelEnabled:true,bevelSize:.08,bevelThickness:.08,bevelSegments:3}),M(0x315b86,.6,.3)));
   shield.position.y=Y[4];S.add(shield);
 
   let mx=0,my=0,sc=0,narrow=false;

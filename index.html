@@ -293,10 +293,10 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
       add("Income Tax","TDS / TCS deposit · "+period,tdsDue,endOfDay(y,m-1,7));
     }
     for(let y=now.getFullYear();y<=now.getFullYear()+1;y++){
-      add("Income Tax","TDS statement · Q1 (24Q / 26Q / 27Q)",endOfDay(y,6,31),endOfDay(y-1,6,31));
-      add("Income Tax","TDS statement · Q2 (24Q / 26Q / 27Q)",endOfDay(y,9,31),endOfDay(y,6,31));
-      add("Income Tax","TDS statement · Q3 (24Q / 26Q / 27Q)",endOfDay(y,0,31),endOfDay(y-1,9,31));
-      add("Income Tax","TDS statement · Q4 (24Q / 26Q / 27Q)",endOfDay(y,4,31),endOfDay(y,0,31));
+      add("Income Tax","TDS / TCS statements · Q1 (24Q / 26Q / 27Q / 27EQ)",endOfDay(y,6,31),endOfDay(y-1,6,31));
+      add("Income Tax","TDS / TCS statements · Q2 (24Q / 26Q / 27Q / 27EQ)",endOfDay(y,9,31),endOfDay(y,6,31));
+      add("Income Tax","TDS / TCS statements · Q3 (24Q / 26Q / 27Q / 27EQ)",endOfDay(y,0,31),endOfDay(y-1,9,31));
+      add("Income Tax","TDS / TCS statements · Q4 (24Q / 26Q / 27Q / 27EQ)",endOfDay(y,4,31),endOfDay(y,0,31));
       add("Income Tax","Advance Tax · 15 June",endOfDay(y,5,15),endOfDay(y-1,5,15));
       add("Income Tax","Advance Tax · 15 September",endOfDay(y,8,15),endOfDay(y-1,8,15));
       add("Income Tax","Advance Tax · 15 December",endOfDay(y,11,15),endOfDay(y-1,11,15));
@@ -308,6 +308,10 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
       add("Income Tax","Form 3CEB · transfer pricing audit report",endOfDay(y,9,31),endOfDay(y-1,9,31));
       add("Income Tax","ITR · transfer pricing cases",endOfDay(y,10,30),endOfDay(y-1,10,30));
       add("Income Tax","Form 10BD / 10BE · donations",endOfDay(y,4,31),endOfDay(y-1,4,31));
+    }
+    // Specific notified extension for AY 2026-27 audit-case returns.
+    if(now<endOfDay(2026,10,21)){
+      add("Income Tax","ITR · audit cases (AY 2026-27 extended date)",endOfDay(2026,10,21),endOfDay(2026,9,31));
     }
     // MCA / ROC and LLP recurring annual and half-yearly filings.
     for(let y=now.getFullYear();y<=now.getFullYear()+1;y++){
@@ -344,9 +348,9 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
     ring.style.strokeDasharray=circumference.toFixed(2);
     ring.style.strokeDashoffset=(circumference*(1-progress)).toFixed(2);
     ring.setAttribute("aria-label",days+" days remaining until "+next.name);
-    $("#gstNext").innerHTML='<div class="deadline-list">'+renderList(items,"GST",5)+'</div><div class="deadline-extra">GSTR-2X: review/accept TDS-TCS credit received; no fixed statutory filing date. GSTR-2B: auto-generated ITC statement (normally generated on the 14th).</div>';
+    $("#gstNext").innerHTML='<div class="deadline-list">'+renderList(items,"GST",5)+'</div><div class="deadline-extra">GSTR-2X: review/accept TDS-TCS credit received; no fixed statutory filing date. GSTR-2B: auto-generated ITC statement (normally generated on the 14th). GSTR-1A: optional amendment before filing GSTR-3B. GSTR-10: within 3 months of cancellation / cancellation order. Refund applications (RFD-01): generally within 2 years of the relevant date.</div>';
     $("#incomeTaxNext").innerHTML='<div class="deadline-list">'+renderList(items,"Income Tax",5)+'</div><div class="deadline-extra">Also track challan-cum-statements (26QB / 26QC / 26QD / 26QE) within 30 days of the relevant month-end, where applicable.</div>';
-    $("#mcaNext").innerHTML='<div class="deadline-list">'+renderList(items,"MCA",5)+'</div><div class="deadline-extra">Event-based: AGM generally within 6 months of FY close (normally 30 September); ADT-1 within 15 days of AGM; AOC-4 / AOC-4 XBRL within 30 days; MGT-7 / MGT-7A within 60 days. DIR-12 and MGT-14 generally within 30 days of the event; PAS-3 within the applicable allotment window; INC-20A within 180 days of incorporation. GSTR-10 is due within 3 months of cancellation / cancellation order, as applicable.</div>';
+    $("#mcaNext").innerHTML='<div class="deadline-list">'+renderList(items,"MCA",5)+'</div><div class="deadline-extra">Event-based: AGM generally within 6 months of FY close (normally 30 September); ADT-1 within 15 days of AGM; AOC-4 / AOC-4 XBRL within 30 days; MGT-7 / MGT-7A within 60 days. DIR-12 and MGT-14 generally within 30 days of the event; PAS-3 generally within 30 days of allotment (special cases may differ); INC-20A within 180 days of incorporation.</div>';
   }
   update();
   setInterval(update,1000);

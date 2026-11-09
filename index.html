@@ -250,6 +250,7 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
       add("GST","GSTR-5 · "+period,endOfDay(y,m,13),endOfDay(y,m-1,13));
       add("GST","GSTR-5A · "+period,endOfDay(y,m,20),endOfDay(y,m-1,20));
       add("GST","GSTR-6 (ISD) · "+period,endOfDay(y,m,13),endOfDay(y,m-1,13));
+      add("GST","GSTR-11 (UIN statement) · "+period,endOfDay(y,m,28),endOfDay(y,m-1,28));
       add("GST","GSTR-7 (TDS) · "+period,endOfDay(y,m,10),endOfDay(y,m-1,10));
       add("GST","GSTR-8 (TCS) · "+period,endOfDay(y,m,10),endOfDay(y,m-1,10));
       // GSTR-2B generation is a system milestone, not a return filing.
@@ -260,17 +261,18 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
         add("GST","IFF (optional, QRMP) · "+period,endOfDay(y,m,13),endOfDay(y,m-1,13));
       }
     }
-    // Quarterly GST returns / statements: due in month after quarter.
+    // Quarterly GST returns / statements: one entry per quarter, due in the following month.
     for(let offset=0;offset<6;offset++){
-      const qMonth=[0,3,6,9][(Math.floor((now.getMonth()+offset)/3))%4];
-      const qYear=now.getFullYear()+Math.floor((now.getMonth()+offset)/12);
+      const rawMonth=Math.floor(now.getMonth()/3)*3+offset*3;
+      const qYear=now.getFullYear()+Math.floor(rawMonth/12),qMonth=rawMonth%12;
       const dueMonth=qMonth+3,dy=qYear+Math.floor(dueMonth/12),dm=dueMonth%12;
-      const qEnd=endOfDay(qYear,qMonth+2,0);
+      const qEnd=endOfDay(qYear,qMonth+3,0);
       const qLabel="Quarter ended "+fmt(qEnd);
       add("GST","GSTR-1 (QRMP) · "+qLabel,endOfDay(dy,dm,13),endOfDay(dy,dm-3,13));
-      add("GST","GSTR-3B (QRMP) · "+qLabel,endOfDay(dy,dm,22),endOfDay(dy,dm-3,22));
+      add("GST","GSTR-3B (QRMP, category X) · "+qLabel,endOfDay(dy,dm,22),endOfDay(dy,dm-3,22));
       add("GST","GSTR-3B (QRMP, category Y) · "+qLabel,endOfDay(dy,dm,24),endOfDay(dy,dm-3,24));
       add("GST","CMP-08 · "+qLabel,endOfDay(dy,dm,18),endOfDay(dy,dm-3,18));
+      add("GST","ITC-04 quarterly (turnover above ₹5 cr) · "+qLabel,endOfDay(dy,dm,25),endOfDay(dy,dm-3,25));
     }
     // GST annual / half-yearly / yearly milestones.
     for(let y=now.getFullYear();y<=now.getFullYear()+1;y++){
@@ -303,7 +305,8 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
       add("Income Tax","ITR · non-audit business / trusts",endOfDay(y,7,31),endOfDay(y-1,7,31));
       add("Income Tax","Tax audit report (standard date)",endOfDay(y,8,30),endOfDay(y-1,8,30));
       add("Income Tax","ITR · audit cases",endOfDay(y,9,31),endOfDay(y-1,9,31));
-      add("Income Tax","Transfer pricing report / ITR (TP cases)",endOfDay(y,10,30),endOfDay(y-1,10,30));
+      add("Income Tax","Form 3CEB · transfer pricing audit report",endOfDay(y,9,31),endOfDay(y-1,9,31));
+      add("Income Tax","ITR · transfer pricing cases",endOfDay(y,10,30),endOfDay(y-1,10,30));
       add("Income Tax","Form 10BD / 10BE · donations",endOfDay(y,4,31),endOfDay(y-1,4,31));
     }
     // MCA / ROC and LLP recurring annual and half-yearly filings.
@@ -315,8 +318,9 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
       add("MCA","PAS-6 · half-year ended 30 September",endOfDay(y,10,29),endOfDay(y,4,30));
       add("MCA","LLP Form 11 · annual return",endOfDay(y,4,30),endOfDay(y-1,4,30));
       add("MCA","LLP Form 8 · statement of account",endOfDay(y,9,30),endOfDay(y-1,9,30));
-      add("MCA","DIR-3 KYC · triennial cycle",endOfDay(2028,5,30),endOfDay(2025,5,30));
     }
+    // Directors who have completed KYC are covered by the next triennial date.
+    add("MCA","DIR-3 KYC · triennial cycle",endOfDay(2028,5,30),endOfDay(2025,5,30));
     // Event-based MCA filing windows are explained in the department note below.
     return items.sort((a,b)=>a.due-b.due);
   }
@@ -342,7 +346,7 @@ $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYe
     ring.setAttribute("aria-label",days+" days remaining until "+next.name);
     $("#gstNext").innerHTML='<div class="deadline-list">'+renderList(items,"GST",5)+'</div><div class="deadline-extra">GSTR-2X: review/accept TDS-TCS credit received; no fixed statutory filing date. GSTR-2B: auto-generated ITC statement (normally generated on the 14th).</div>';
     $("#incomeTaxNext").innerHTML='<div class="deadline-list">'+renderList(items,"Income Tax",5)+'</div><div class="deadline-extra">Also track challan-cum-statements (26QB / 26QC / 26QD / 26QE) within 30 days of the relevant month-end, where applicable.</div>';
-    $("#mcaNext").innerHTML='<div class="deadline-list">'+renderList(items,"MCA",5)+'</div><div class="deadline-extra">Event-based: AGM generally by 30 September; ADT-1 within 15 days of AGM; AOC-4 within 30 days; MGT-7 / MGT-7A within 60 days. DIR-12 / MGT-14 / PAS-3 and INC-20A are triggered by the relevant event or incorporation.</div>';
+    $("#mcaNext").innerHTML='<div class="deadline-list">'+renderList(items,"MCA",5)+'</div><div class="deadline-extra">Event-based: AGM generally within 6 months of FY close (normally 30 September); ADT-1 within 15 days of AGM; AOC-4 / AOC-4 XBRL within 30 days; MGT-7 / MGT-7A within 60 days. DIR-12 and MGT-14 generally within 30 days of the event; PAS-3 within the applicable allotment window; INC-20A within 180 days of incorporation. GSTR-10 is due within 3 months of cancellation / cancellation order, as applicable.</div>';
   }
   update();
   setInterval(update,1000);

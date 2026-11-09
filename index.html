@@ -43,11 +43,15 @@ nav a{text-decoration:none;color:var(--mute)}nav a:hover{color:var(--gold)}
 .deadline-clock span{display:flex;flex-direction:column;gap:2px}
 .deadline-clock b{font:700 1.05rem Sora,sans-serif;font-variant-numeric:tabular-nums;color:var(--blue)}
 .deadline-clock small{font:700 .58rem Sora,sans-serif;letter-spacing:.1em;color:var(--mute)}
-.deadline-departments{display:grid;gap:9px;margin-top:18px;padding-top:15px;border-top:1px solid var(--line)}
-.deadline-department{display:grid;grid-template-columns:105px minmax(0,1fr);gap:10px;align-items:start;font-size:.78rem;line-height:1.4}
-.deadline-department b{font:700 .7rem Sora,sans-serif;letter-spacing:.04em;color:var(--blue)}
-.deadline-department span{color:var(--mute)}
-.deadline-note{font-size:.68rem!important;line-height:1.45!important;color:var(--mute)!important;margin:13px 0 0!important;max-width:none!important}
+.deadline-departments{display:grid;gap:12px;margin-top:18px;padding-top:15px;border-top:1px solid var(--line);max-height:330px;overflow-y:auto;padding-right:4px}
+.deadline-department-group{display:grid;grid-template-columns:92px minmax(0,1fr);gap:9px;align-items:start;font-size:.73rem;line-height:1.45}
+.deadline-department-group>b{font:700 .65rem Sora,sans-serif;letter-spacing:.05em;color:var(--blue);padding-top:2px}
+.deadline-list{display:grid;gap:6px;color:var(--mute)}
+.deadline-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}
+.deadline-item strong{font:500 .72rem "DM Sans",sans-serif;color:var(--ink)}
+.deadline-item time{font:700 .68rem Sora,sans-serif;color:var(--mint);white-space:nowrap}
+.deadline-extra{font-size:.68rem;line-height:1.4;color:var(--mute);padding-top:5px;border-top:1px dashed var(--line);margin-top:2px}
+.deadline-note{font-size:.66rem!important;line-height:1.45!important;color:var(--mute)!important;margin:12px 0 0!important;max-width:none!important}
 @media(max-width:820px){.hero{grid-template-columns:1fr;gap:30px;align-content:center}.deadline-card{margin:0;max-width:520px}}
 @media(max-width:420px){.deadline-card{padding:20px 16px}.deadline-main{gap:12px}.deadline-ring-wrap{flex-basis:118px;width:118px;height:118px}.deadline-ring-center strong{font-size:2.1rem}.deadline-details>strong{font-size:.92rem}.deadline-clock{gap:8px}}
 .hero .txt{max-width:600px}
@@ -131,12 +135,12 @@ footer{border-top:1px solid var(--line);padding:30px 5vw;text-align:center;color
 </div>
 </div>
 </div>
-<div class="deadline-departments" aria-label="Upcoming department-wise compliance dates">
-<div class="deadline-department"><b>GST</b><span id="gstNext">Loading…</span></div>
-<div class="deadline-department"><b>MCA / ROC</b><span id="mcaNext">Loading…</span></div>
-<div class="deadline-department"><b>Income Tax</b><span id="incomeTaxNext">Loading…</span></div>
+<div class="deadline-departments" aria-label="Upcoming GST, Income Tax and MCA compliance dates">
+<div class="deadline-department-group"><b>GST</b><div id="gstNext">Loading compliance dates…</div></div>
+<div class="deadline-department-group"><b>INCOME TAX</b><div id="incomeTaxNext">Loading compliance dates…</div></div>
+<div class="deadline-department-group"><b>MCA / ROC / LLP</b><div id="mcaNext">Loading compliance dates…</div></div>
 </div>
-<p class="deadline-note">Indicative dates for common compliances. AGM-linked MCA filings, taxpayer-specific applicability and government extensions may change deadlines. Verify before filing.</p>
+<p class="deadline-note">Comprehensive indicative calendar for common and conditional compliances. Applicability, turnover category, QRMP/state category, AGM/event dates and government extensions can change deadlines. GSTR-2B is an auto-generated ITC statement; GSTR-2X is a TDS/TCS credit-received statement and neither has a normal return-filing due date. Verify portal notices before filing.</p>
 </aside>
 </header>
 <div class="tick"><div id="tk"></div></div>
@@ -217,81 +221,128 @@ $("#cMail2").href="mailto:"+CONFIG.contactEmail2;$("#cMail2").textContent=CONFIG
 $("#cTel1").href="tel:"+CONFIG.phone.replace(/\s/g,"");$("#cTel1").textContent=CONFIG.phone;
 $("#cTel2").href="tel:"+CONFIG.phone2.replace(/\s/g,"");$("#cTel2").textContent=CONFIG.phone2;
 $("#cAddr").textContent=CONFIG.address;$("#yr").textContent=new Date().getFullYear();
-/* ===== Department-wise statutory compliance calendar =====
-   Recurring standard dates only; extensions and client-specific dates are not fetched live. */
+/* ===== Comprehensive recurring and event-based compliance calendar =====
+   Dates are default statutory cycles; no live extension feed or client-specific profile is connected. */
 (function(){
   const ring=$("#deadlineProgress"),label=$("#deadlineLabel"),dateEl=$("#deadlineDate");
   if(!ring||!label||!dateEl)return;
-  const circumference=2*Math.PI*52,day=86400000;
+  const DAY=86400000,circumference=2*Math.PI*52;
   const endOfDay=(y,m,d)=>new Date(y,m,d,23,59,59,999);
   const fmt=d=>d.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
-  const periodLabel=d=>new Date(d.getFullYear(),d.getMonth()-1,1).toLocaleDateString("en-IN",{month:"short",year:"numeric"});
-  const nextDate=(now,month,dayOfMonth)=>{
-    let d=endOfDay(now.getFullYear(),month,dayOfMonth);
-    if(d<=now)d=endOfDay(now.getFullYear()+1,month,dayOfMonth);
+  const monthName=d=>d.toLocaleDateString("en-IN",{month:"short",year:"numeric"});
+  const nextFixed=(now,month,day)=>{
+    let d=endOfDay(now.getFullYear(),month,day);
+    if(d<=now)d=endOfDay(now.getFullYear()+1,month,day);
     return d;
   };
+  const quarterEndMonths=[2,5,8,11];
   function buildCalendar(now){
     const items=[];
-    const add=(dept,name,due,previous)=>{if(due>now)items.push({dept,name,due,previous})};
-    // GST: monthly returns for regular monthly filers.
-    for(let offset=0;offset<3;offset++){
-      const monthStart=new Date(now.getFullYear(),now.getMonth()+offset,1);
-      const y=monthStart.getFullYear(),m=monthStart.getMonth();
-      const g1=endOfDay(y,m,11),g3=endOfDay(y,m,20);
-      add("GST","GSTR-1 · "+periodLabel(g1),g1,endOfDay(y,m-1,11));
-      add("GST","GSTR-3B · "+periodLabel(g3),g3,endOfDay(y,m-1,20));
+    const add=(dept,name,due,previous)=>{
+      if(due instanceof Date&&!isNaN(due)&&due>now)items.push({dept,name,due,previous:previous instanceof Date?previous:new Date(due-DAY*30)});
+    };
+    // GST monthly and quarterly return cycles.
+    for(let offset=0;offset<14;offset++){
+      const month=new Date(now.getFullYear(),now.getMonth()+offset,1),y=month.getFullYear(),m=month.getMonth();
+      const prev=new Date(y,m-1,1),period=monthName(prev);
+      add("GST","GSTR-1 · "+period,endOfDay(y,m,11),endOfDay(y,m-1,11));
+      add("GST","GSTR-3B · "+period,endOfDay(y,m,20),endOfDay(y,m-1,20));
+      add("GST","GSTR-5 · "+period,endOfDay(y,m,13),endOfDay(y,m-1,13));
+      add("GST","GSTR-5A · "+period,endOfDay(y,m,20),endOfDay(y,m-1,20));
+      add("GST","GSTR-6 (ISD) · "+period,endOfDay(y,m,13),endOfDay(y,m-1,13));
+      add("GST","GSTR-7 (TDS) · "+period,endOfDay(y,m,10),endOfDay(y,m-1,10));
+      add("GST","GSTR-8 (TCS) · "+period,endOfDay(y,m,10),endOfDay(y,m-1,10));
+      // GSTR-2B generation is a system milestone, not a return filing.
+      add("GST","GSTR-2B ITC statement review · "+period,endOfDay(y,m,14),endOfDay(y,m-1,14));
+      // QRMP-only monthly challan and optional IFF for first two months of quarter.
+      if([0,1,3,4,6,7,9,10].includes(m)){
+        add("GST","PMT-06 challan (QRMP) · "+period,endOfDay(y,m,25),endOfDay(y,m-1,25));
+        add("GST","IFF (optional, QRMP) · "+period,endOfDay(y,m,13),endOfDay(y,m-1,13));
+      }
     }
-    // Income Tax: monthly TDS/TCS deposit, advance tax and common ITR dates.
-    for(let offset=0;offset<3;offset++){
-      const monthStart=new Date(now.getFullYear(),now.getMonth()+offset,1);
-      const y=monthStart.getFullYear(),m=monthStart.getMonth();
-      const tds=endOfDay(y,m,7);
-      add("Income Tax","TDS / TCS deposit",tds,endOfDay(y,m-1,7));
+    // Quarterly GST returns / statements: due in month after quarter.
+    for(let offset=0;offset<6;offset++){
+      const qMonth=[0,3,6,9][(Math.floor((now.getMonth()+offset)/3))%4];
+      const qYear=now.getFullYear()+Math.floor((now.getMonth()+offset)/12);
+      const dueMonth=qMonth+3,dy=qYear+Math.floor(dueMonth/12),dm=dueMonth%12;
+      const qEnd=endOfDay(qYear,qMonth+2,0);
+      const qLabel="Quarter ended "+fmt(qEnd);
+      add("GST","GSTR-1 (QRMP) · "+qLabel,endOfDay(dy,dm,13),endOfDay(dy,dm-3,13));
+      add("GST","GSTR-3B (QRMP) · "+qLabel,endOfDay(dy,dm,22),endOfDay(dy,dm-3,22));
+      add("GST","GSTR-3B (QRMP, category Y) · "+qLabel,endOfDay(dy,dm,24),endOfDay(dy,dm-3,24));
+      add("GST","CMP-08 · "+qLabel,endOfDay(dy,dm,18),endOfDay(dy,dm-3,18));
+    }
+    // GST annual / half-yearly / yearly milestones.
+    for(let y=now.getFullYear();y<=now.getFullYear()+1;y++){
+      add("GST","GSTR-9 / GSTR-9C annual return",endOfDay(y,11,31),endOfDay(y-1,11,31));
+      add("GST","LUT for exports (next FY)",endOfDay(y,2,31),endOfDay(y-1,2,31));
+      add("GST","GSTR-4 annual (composition)",endOfDay(y,5,30),endOfDay(y-1,5,30));
+      add("GST","ITC-04 half-yearly (turnover up to ₹5 cr)",endOfDay(y,9,25),endOfDay(y,3,25));
+      add("GST","ITC-04 half-yearly (turnover up to ₹5 cr)",endOfDay(y,3,25),endOfDay(y-1,9,25));
+    }
+    // GSTR-2X is a recipient credit statement; no fixed statutory filing due date.
+    // Add a non-date guidance item below the dated GST items instead of inventing a due date.
+
+    // Income Tax: TDS deposits, quarterly statements, advance tax and returns.
+    for(let offset=0;offset<14;offset++){
+      const month=new Date(now.getFullYear(),now.getMonth()+offset,1),y=month.getFullYear(),m=month.getMonth();
+      const prev=new Date(y,m-1,1),period=monthName(prev);
+      const tdsDue=m===3?endOfDay(y,m,30):endOfDay(y,m,7);
+      add("Income Tax","TDS / TCS deposit · "+period,tdsDue,endOfDay(y,m-1,7));
     }
     for(let y=now.getFullYear();y<=now.getFullYear()+1;y++){
-      [[5,15,"1st instalment"],[8,15,"2nd instalment"],[11,15,"3rd instalment"],[2,15,"Final instalment"]].forEach(([m,d,n])=>{
-        const due=endOfDay(y,m,d),previous=endOfDay(y-1,m,d);
-        add("Income Tax","Advance Tax · "+n,due,previous);
-      });
+      add("Income Tax","TDS statement · Q1 (24Q / 26Q / 27Q)",endOfDay(y,6,31),endOfDay(y-1,6,31));
+      add("Income Tax","TDS statement · Q2 (24Q / 26Q / 27Q)",endOfDay(y,9,31),endOfDay(y,6,31));
+      add("Income Tax","TDS statement · Q3 (24Q / 26Q / 27Q)",endOfDay(y,0,31),endOfDay(y-1,9,31));
+      add("Income Tax","TDS statement · Q4 (24Q / 26Q / 27Q)",endOfDay(y,4,31),endOfDay(y,0,31));
+      add("Income Tax","Advance Tax · 15 June",endOfDay(y,5,15),endOfDay(y-1,5,15));
+      add("Income Tax","Advance Tax · 15 September",endOfDay(y,8,15),endOfDay(y-1,8,15));
+      add("Income Tax","Advance Tax · 15 December",endOfDay(y,11,15),endOfDay(y-1,11,15));
+      add("Income Tax","Advance Tax · 15 March",endOfDay(y,2,15),endOfDay(y-1,2,15));
+      add("Income Tax","ITR-1 / ITR-2 · non-audit individuals",endOfDay(y,6,31),endOfDay(y-1,6,31));
+      add("Income Tax","ITR · non-audit business / trusts",endOfDay(y,7,31),endOfDay(y-1,7,31));
+      add("Income Tax","Tax audit report (standard date)",endOfDay(y,8,30),endOfDay(y-1,8,30));
+      add("Income Tax","ITR · audit cases",endOfDay(y,9,31),endOfDay(y-1,9,31));
+      add("Income Tax","Transfer pricing report / ITR (TP cases)",endOfDay(y,10,30),endOfDay(y-1,10,30));
+      add("Income Tax","Form 10BD / 10BE · donations",endOfDay(y,4,31),endOfDay(y-1,4,31));
     }
-    const taxYear=now.getFullYear()+1;
-    add("Income Tax","ITR-1 / ITR-2 · Individuals",endOfDay(taxYear,6,31),endOfDay(taxYear-1,6,31));
-    add("Income Tax","ITR · Non-audit business",endOfDay(taxYear,7,31),endOfDay(taxYear-1,7,31));
-    add("Income Tax","ITR · Audit cases",endOfDay(taxYear,9,31),endOfDay(taxYear-1,9,31));
-    // MCA fixed annual dates: DPT-3. DIR-3 KYC is now a 3-year cycle;
-    // the next common date for directors already compliant is 30 June 2028.
-    add("MCA","DPT-3 · Return of deposits",nextDate(now,5,30),endOfDay(now.getFullYear()-1,5,30));
-    if(now<endOfDay(2028,5,30)){
-      add("MCA","DIR-3 KYC · 3-year cycle",endOfDay(2028,5,30),endOfDay(2025,5,30));
+    // MCA / ROC and LLP recurring annual and half-yearly filings.
+    for(let y=now.getFullYear();y<=now.getFullYear()+1;y++){
+      add("MCA","DPT-3 · deposits / exempted receipts",endOfDay(y,5,30),endOfDay(y-1,5,30));
+      add("MCA","MSME-1 · Oct–Mar half-year",endOfDay(y,3,30),endOfDay(y-1,3,30));
+      add("MCA","MSME-1 · Apr–Sep half-year",endOfDay(y,9,31),endOfDay(y,3,30));
+      add("MCA","PAS-6 · half-year ended 31 March",endOfDay(y,4,30),endOfDay(y-1,10,30));
+      add("MCA","PAS-6 · half-year ended 30 September",endOfDay(y,10,29),endOfDay(y,4,30));
+      add("MCA","LLP Form 11 · annual return",endOfDay(y,4,30),endOfDay(y-1,4,30));
+      add("MCA","LLP Form 8 · statement of account",endOfDay(y,9,30),endOfDay(y-1,9,30));
+      add("MCA","DIR-3 KYC · triennial cycle",endOfDay(2028,5,30),endOfDay(2025,5,30));
     }
-    // AOC-4 and MGT-7 depend on the actual AGM date; show the rule separately.
+    // Event-based MCA filing windows are explained in the department note below.
     return items.sort((a,b)=>a.due-b.due);
   }
+  function renderList(items,dept,limit){
+    const selected=items.filter(x=>x.dept===dept).slice(0,limit);
+    return selected.map(x=>'<div class="deadline-item"><strong>'+x.name+'</strong><time>'+fmt(x.due)+'</time></div>').join("")||'<div class="deadline-extra">No upcoming standard date in the generated window.</div>';
+  }
   function update(){
-    const now=new Date(),items=buildCalendar(now);
-    const next=items[0];
+    const now=new Date(),items=buildCalendar(now),next=items[0];
     if(!next){label.textContent="No upcoming deadline found";return}
-    const remaining=Math.max(0,next.due-now),total=Math.max(1,next.due-next.previous);
-    const days=Math.floor(remaining/day);
-    const hours=Math.floor(remaining%day/3600000);
-    const minutes=Math.floor(remaining%3600000/60000);
-    const seconds=Math.floor(remaining%60000/1000);
+    const remaining=Math.max(0,next.due-now),days=Math.floor(remaining/DAY);
     $("#deadlineDays").textContent=days;
-    $("#deadlineHours").textContent=String(hours).padStart(2,"0");
-    $("#deadlineMinutes").textContent=String(minutes).padStart(2,"0");
-    $("#deadlineSeconds").textContent=String(seconds).padStart(2,"0");
+    $("#deadlineHours").textContent=String(Math.floor(remaining%DAY/3600000)).padStart(2,"0");
+    $("#deadlineMinutes").textContent=String(Math.floor(remaining%3600000/60000)).padStart(2,"0");
+    $("#deadlineSeconds").textContent=String(Math.floor(remaining%60000/1000)).padStart(2,"0");
     label.textContent=next.name;
     dateEl.textContent="Due "+fmt(next.due);
+    const previous=next.previous||new Date(next.due.getTime()-30*DAY);
+    const total=Math.max(1,next.due-previous);
     const progress=Math.min(1,Math.max(0,remaining/total));
     ring.style.strokeDasharray=circumference.toFixed(2);
     ring.style.strokeDashoffset=(circumference*(1-progress)).toFixed(2);
     ring.setAttribute("aria-label",days+" days remaining until "+next.name);
-    const firstFor=dept=>items.find(x=>x.dept===dept);
-    const gst=firstFor("GST"),mca=firstFor("MCA"),income=firstFor("Income Tax");
-    $("#gstNext").textContent=gst?gst.name+" · "+fmt(gst.due):"No upcoming date found";
-    $("#mcaNext").textContent=(mca?mca.name+" · "+fmt(mca.due):"No fixed date found")+"; AOC-4: 30 days and MGT-7: 60 days from actual AGM";
-    $("#incomeTaxNext").textContent=income?income.name+" · "+fmt(income.due):"No upcoming date found";
+    $("#gstNext").innerHTML='<div class="deadline-list">'+renderList(items,"GST",5)+'</div><div class="deadline-extra">GSTR-2X: review/accept TDS-TCS credit received; no fixed statutory filing date. GSTR-2B: auto-generated ITC statement (normally generated on the 14th).</div>';
+    $("#incomeTaxNext").innerHTML='<div class="deadline-list">'+renderList(items,"Income Tax",5)+'</div><div class="deadline-extra">Also track challan-cum-statements (26QB / 26QC / 26QD / 26QE) within 30 days of the relevant month-end, where applicable.</div>';
+    $("#mcaNext").innerHTML='<div class="deadline-list">'+renderList(items,"MCA",5)+'</div><div class="deadline-extra">Event-based: AGM generally by 30 September; ADT-1 within 15 days of AGM; AOC-4 within 30 days; MGT-7 / MGT-7A within 60 days. DIR-12 / MGT-14 / PAS-3 and INC-20A are triggered by the relevant event or incorporation.</div>';
   }
   update();
   setInterval(update,1000);
